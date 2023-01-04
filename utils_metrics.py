@@ -1,7 +1,18 @@
 from collections import defaultdict
 import numpy as np
+from nltk.translate.bleu_score import corpus_bleu
 
-def metrics_classification((trues_list, preds_list):
+def metrics_generation(trues_list, preds_list):
+
+    references = []
+    candidates = []
+    for a, b in zip(trues_list, preds_list):
+        references.append([a.split()])
+        candidates.append(b.split())
+
+    return {'bleu': corpus_bleu(references, candidates)}
+
+def metrics_classification(trues_list, preds_list):
     acc = 0.0
     for a, b in zip(trues_list, preds_list):
         if a[0] == b[0]:

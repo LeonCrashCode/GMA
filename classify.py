@@ -59,7 +59,6 @@ def prediction(input_TXT):
 
     template_list_length = len(template_list)
 
-    input_TXT = input_TXT.split(' ')
     input_TXT = [input_TXT] * template_list_length
     input_ids = tokenizer(input_TXT, return_tensors='pt')['input_ids']
 
@@ -106,15 +105,15 @@ model.config.use_cache = False
 # print(input_ids)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-input_file = './conll2003/test.txt'
-output_file = ''
+input_file = sys.argv[1]
+output_file = sys.argv[2]
 examples = []
 for line in open(file_path):
     line = line.strip()
     if line == "":
         continue
     words, labels, targets = line.split("\t")
-    InputExample(words=words, labels=labels)
+    InputExample(words=words, labels=labels.split())
     examples.append(InputExample)    
 
 trues_list = []

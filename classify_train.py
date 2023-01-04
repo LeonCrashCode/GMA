@@ -5,11 +5,13 @@ logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger("transformers")
 transformers_logger.setLevel(logging.WARNING)
 
+train_file = sys.argv[1]
+eval_file = sys.argv[2]
 
-train_data = pd.read_csv("./conll2003/train.csv", sep=',').values.tolist()
+train_data = pd.read_csv(train_file, sep='|').values.tolist()
 train_df = pd.DataFrame(train_data, columns=["input_text", "target_text"])
 
-eval_data = pd.read_csv("./conll2003/dev.csv", sep=',').values.tolist()
+eval_data = pd.read_csv(eval_file, sep='|').values.tolist()
 eval_df = pd.DataFrame(eval_data, columns=["input_text", "target_text"])
 
 model_args = {
@@ -34,7 +36,7 @@ model_args = {
 # Initialize model
 model = Seq2SeqModel(
     encoder_decoder_type="bart",
-    encoder_decoder_name="facebook/bart-large",
+    encoder_decoder_name="facebook/bart-base",
     args=model_args,
     # use_cuda=False,
 )
@@ -49,4 +51,4 @@ results = model.eval_model(eval_df)
 
 # Use the model for prediction
 
-print(model.predict(["Japan began the defence of their Asian Cup title with a lucky 2-1 win against Syria in a Group C championship match on Friday."]))
+#print(model.predict(["Japan began the defence of their Asian Cup title with a lucky 2-1 win against Syria in a Group C championship match on Friday."]))
