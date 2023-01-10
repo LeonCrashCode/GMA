@@ -4,7 +4,7 @@ from seq2seq_model import Seq2SeqModel
 logging.basicConfig(level=logging.INFO)
 transformers_logger = logging.getLogger("transformers")
 transformers_logger.setLevel(logging.WARNING)
-
+import sys
 train_file = sys.argv[1]
 eval_file = sys.argv[2]
 
@@ -18,8 +18,8 @@ model_args = {
     "reprocess_input_data": True,
     "overwrite_output_dir": True,
     "max_seq_length": 50,
-    "train_batch_size": 100,
-    "num_train_epochs": 20,
+    "train_batch_size": 10,
+    "num_train_epochs": 10,
     "save_eval_checkpoints": False,
     "save_model_every_epoch": False,
     "evaluate_during_training": True,

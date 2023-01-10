@@ -55,7 +55,7 @@ for line in open(file_path):
     line = line.strip()
     if line == "":
         continue
-    words, labels, targets = line.split("\t")
+    words, labels, targets = line.split("|")
     InputExample(words=words, labels=targets)
     examples.append(InputExample)    
 

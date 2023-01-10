@@ -17,7 +17,8 @@ def metrics_classification(trues_list, preds_list):
     for a, b in zip(trues_list, preds_list):
         if a[0] == b[0]:
             acc += 1
-    acc /= len(binary_t)
+
+    acc /= len(trues_list)
   
    
     mul_acc = defaultdict(float)
