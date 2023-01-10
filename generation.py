@@ -3,6 +3,7 @@ from transformers import BartForConditionalGeneration, BartTokenizer, BartConfig
 import torch
 import time
 import math
+import sys
 
 class InputExample():
     def __init__(self, words, labels):
@@ -15,16 +16,31 @@ def prediction(input_TXT):
 
     template = "Straightforwardly speaking,"
 
+    input_TXT += input_TXT + " " + template
+
     input_ids = tokenizer(input_TXT, return_tensors='pt')['input_ids']
 
-    output_ids = tokenizer(template.split(), return_tensors='pt', padding=True, truncation=True)['input_ids']
+    """
+    output_ids = tokenizer(template, return_tensors='pt', padding=True, truncation=True)['input_ids']
     output_ids[:, 0] = 2
-     
+    
+    print(input_ids.shape)
+    print(output_ids.shape)
+
+    print(output_ids)
     with torch.no_grad():
         output = model(input_ids=input_ids.to(device), decoder_input_ids=output_ids[:, :output_ids.shape[1] - 1].to(device))[0]        
+        print(output.shape)
         index = output.argmax(dim=-1)[:,:MAX_LENGTH].to('cpu')
         print(index.shape)
+        print(index)
         generated_output = tokenizer.batch_decode(index, skip_special_tokens=True)  
+        print(generated_output) 
+    return generated_output[0]
+    """
+
+    output_ids = model.generate(input_ids.to(device), num_beams=1, min_length=0, max_length=MAX_LENGTH)
+    generated_output = tokenizer.batch_decode(output_ids.to('cpu'), skip_special_tokens=True, clean_up_tokenization_spaces=False)
 
     return generated_output[0]
 
@@ -49,15 +65,14 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 input_file = sys.argv[1]
 output_file = sys.argv[2]
-MAX_length = 50
+MAX_LENGTH = 50
 examples = []
-for line in open(file_path):
+for line in open(input_file):
     line = line.strip()
     if line == "":
         continue
     words, labels, targets = line.split("|")
-    InputExample(words=words, labels=targets)
-    examples.append(InputExample)    
+    examples.append(InputExample(words=words, labels=targets))
 
 trues_list = []
 preds_list = []
