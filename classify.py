@@ -57,7 +57,7 @@ def prediction(input_TXT):
         "ideational"
         ]
 
-    print(input_TXT)
+    #print(input_TXT)
     
     template_list_length = len(template_list)
 
@@ -72,7 +72,7 @@ def prediction(input_TXT):
         output_length = tokenizer(template_list[i], return_tensors='pt', padding=True, truncation=True)['input_ids'].shape[1] - 2
         output_length_list.append(output_length)
     
-    print(output_length_list)
+    #print(output_length_list)
 
     score = [1] * template_list_length
     with torch.no_grad():
@@ -84,11 +84,11 @@ def prediction(input_TXT):
             for j in range(template_list_length):
                 if i < output_length_list[j]:
                     score[j] = score[j] * logits[j][int(output_ids[j][i + 1])]
-            print(score)
+            #print(score)
 
     pred_labels = make_labels(score, label_list)
 
-    print(pred_labels)
+    #print(pred_labels)
     
     return pred_labels
 
